@@ -15,7 +15,7 @@ Please submit a `.zip` file including:
 
 If you end up getting to a solution that you aren't happy with or that is a dead end, document why and we will call that good enough. A write-up of why a solution is insufficient and how you might approach it differently often tells us what we need to know.
 
-Once you have completed your solution, email it to `kacie.neurohr@sedaro.com` and the other email(s) listed in the original instructions. To avoid your submission being blocked by our mail server, we recommend sharing the `.zip` file using a Google Drive link (or similar sharing service).
+Once you have completed your solution, email it to `kacie.neurohr@sedaro.com` and the other email(s) listed in the original instructions. To avoid your submission being blocked by our mail server, we recommend sharing the `.zip` file using a Google Drive link (or similar sharing service). Please notify Kacie in a separate email that you have submitted your solution so we can confirm receipt.
 
 ## Forking Policy
 
