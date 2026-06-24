@@ -2,13 +2,16 @@
 The tiniest possible mockup of our system
 
 ## Goal
-The goal of this mini-project is to gain a better understanding of your ability to **be creative**, **think through problems**, and **solve relevant challenges** related to the engineering role you have applied for at Sedaro. This is an opportunity for you to show off your personal strengths. Don't focus on the simple contributions and instead aim to really impress us.
+This mini-project is a chance to show off your personal strengths and how you scope a problem, structure a solution, and reason about tradeoffs. Aim for a submission that's cohesive and impressive.
 
-This is primarily a test of architecture, design, and product judgment, not simply coding proficiency. We care more about how you scope a problem, structure your solution, and reason about tradeoffs than about raw volume of code. A modest change that reflects clear thinking will land better than a large one that doesn't.
+Submissions are evaluated on whether they:
+- Showcase the skills this role needs. You don't have to contribute everywhere.
+- Meaningfully improve the sample project and demonstrate sound product judgment.
+- Tackle something challenging that matches the level for which you're applying.
+- Meet the quality bar you'd hold for an MR on a production team: code you'd be proud to ship and comfortable handing a teammate for review.
+- Are explained clearly and concisely, respecting our time.
 
-Hold your work to the quality bar you would set for an MR you'd open for review on a production team: code you'd be comfortable having a teammate read, with the testing, error handling, and documentation you'd expect of yourself day to day.
-
-Submissions are evaluated on whether they are job-relevant, meet the title level, make the product better, keep a high quality bar, and are clearly and concisely explained in the write-up. The project is due within **7 days** of receipt and we expect you to spend no more than **6 hours** on it. If you have any questions, issues, or if you get stuck, please contact Kacie at `kacie.neurohr@sedaro.com`.
+The project is due within **7 days** of receipt and we expect you to spend no more than **6 hours** on it. If you have any questions, issues, or if you get stuck, please contact Kacie at `kacie.neurohr@sedaro.com`.
 
 ## Submission
 Please submit a `.zip` file including:
