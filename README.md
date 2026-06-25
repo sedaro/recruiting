@@ -32,8 +32,6 @@ Once you have completed your solution, email it to `kacie.neurohr@sedaro.com` an
 ## Choosing a Project
 Included in this directory is a tiny mockup of Sedaro's system. Though it technically comprises a full-stack app, there are _many_ areas in which it could be improved. Review the files that make up Sedaro Nano to figure out how it works, then choose a project that shows off your unique strengths. The prompt is intentionally open-ended to allow creative solutions.
 
-Choose a project that stands on its own as a cohesive deliverable rather than a scattering of small, unrelated tweaks. We would much rather see one well-scoped improvement carried through end to end than several partial ones left half-finished.
-
 Here are some suggestions to get you thinking:
 
 #### Frontend/full-stack
