@@ -2,9 +2,16 @@
 The tiniest possible mockup of our system
 
 ## Goal
-The goal of this mini-project is to gain a better understanding of your ability to **be creative**, **think through problems**, and **solve relevant challenges** related to the engineering role you have applied for at Sedaro. This is an opportunity for you to show off your personal strengths. Don't focus on the simple contributions and instead aim to really impress us.
+This mini-project is a chance to show off your personal strengths and how you scope a problem, structure a solution, and reason about tradeoffs. Aim for a submission that's cohesive and impressive.
 
-Submissions are evaluated on whether they are job-relevant, meet the title level, make the product better, keep a high quality bar, and are clearly and concisely explained in the write-up. The project is due within **7 days** of receipt and we expect you to spend no more than **6 hours** on it. If you have any questions, issues, or if you get stuck, please contact Kacie at `kacie.neurohr@sedaro.com`.
+Submissions are evaluated on whether they:
+- Showcase the skills this role needs. You don't have to contribute everywhere.
+- Meaningfully improve the sample project and demonstrate sound product judgment.
+- Tackle something challenging that matches the level for which you're applying.
+- Meet the quality bar you'd hold for an MR on a production team: code you'd be proud to ship and comfortable handing a teammate for review.
+- Are explained clearly and concisely, respecting our time.
+
+The project is due within **7 days** of receipt and we expect you to spend no more than **6 hours** on it. If you have any questions, issues, or if you get stuck, please contact Kacie at `kacie.neurohr@sedaro.com`.
 
 ## Submission
 Please submit a `.zip` file including:
@@ -12,6 +19,7 @@ Please submit a `.zip` file including:
 - **Instructions** for setting up and running your solution
 - **Screenshots or a video** of your solution in action (we love to see videos 🙌)
 - A **write-up** explaining your changes and why you made them
+- A description of the tools you used and how you used them, including any AI assistants or agents.
 
 If you end up getting to a solution that you aren't happy with or that is a dead end, document why and we will call that good enough. A write-up of why a solution is insufficient and how you might approach it differently often tells us what we need to know.
 
