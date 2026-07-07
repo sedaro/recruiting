@@ -17,7 +17,7 @@ The project is due within **7 days** of receipt and we expect you to spend no mo
 Please submit a `.zip` file including:
 - The **code** (excluding temporary or .gitignored files and directories, such as `__pycache__`, `node_modules`, `target`, or any local virtual environments)
 - **Instructions** for setting up and running your solution
-- **Screenshots or a video** of your solution in action (we love to see videos 🙌)
+- **A video** of your solution in action explaining your key design decisions (**required** - submissions without a video will not be reviewed)
 - A **write-up** explaining your changes and why you made them
 - A description of the tools you used and how you used them, including any AI assistants or agents.
 
