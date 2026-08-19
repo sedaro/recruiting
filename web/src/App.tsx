@@ -101,11 +101,11 @@ const App = () => {
             style={{ width: '45%', height: '100%', margin: '5px' }}
             data={positionData}
             layout={{
-              title: 'Position',
+              title: { text: 'Position' },
               scene: {
-                xaxis: { title: 'X' },
-                yaxis: { title: 'Y' },
-                zaxis: { title: 'Z' },
+                xaxis: { title: { text: 'X' } },
+                yaxis: { title: { text: 'Y' } },
+                zaxis: { title: { text: 'Z' } },
               },
               autosize: true,
               dragmode: 'turntable',
@@ -119,11 +119,11 @@ const App = () => {
             style={{ width: '45%', height: '100%', margin: '5px' }}
             data={velocityData}
             layout={{
-              title: 'Velocity',
+              title: { text: 'Velocity' },
               scene: {
-                xaxis: { title: 'X' },
-                yaxis: { title: 'Y' },
-                zaxis: { title: 'Z' },
+                xaxis: { title: { text: 'X' } },
+                yaxis: { title: { text: 'Y' } },
+                zaxis: { title: { text: 'Z' } },
               },
               autosize: true,
               dragmode: 'turntable',

@@ -7,14 +7,16 @@
     "jsx": "react-jsx",
     "target": "ESNext",
     "allowJs": true,
-    "baseUrl": "src",
+    // Lets `src/` modules be imported by bare name, as in `from 'routes'`.
+    // TypeScript 7 removed `baseUrl`; `vite-tsconfig-paths` mirrors this into Vite.
+    "paths": { "*": ["./src/*"] },
     "lib": ["dom", "dom.iterable", "esnext"],
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
