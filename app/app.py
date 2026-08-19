@@ -73,7 +73,7 @@ def simulate():
     init: dict = request.json
     for key in init.keys():
         init[key]["time"] = 0
-        init[key]["timeStep"] = 100
+        init[key]["timeStep"] = 0.01
 
     # Build a simulator
     simulator = Simulator(init, AGENTS)

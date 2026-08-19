@@ -150,14 +150,14 @@ AGENTS = {
 # NOTE: initial values are set here. we intentionally separate the data from the functions operating on it.
 DATA = {
     'Body1': {
-        'timeStep': 100,
+        'timeStep': 0.01,
         'time': 0.0,
         'position': {'x': -0.73, 'y': 0, 'z': 0},
         'velocity': {'x': 0, 'y': -0.0015, 'z': 0},
         'mass': 1
     },
     'Body2': {
-        'timeStep': 100,
+        'timeStep': 0.01,
         'time': 0.0,
         'position': {'x': 60.34, 'y': 0, 'z': 0},
         'velocity': {'x': 0, 'y': 0, 'z': 0.13},
