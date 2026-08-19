@@ -15,15 +15,6 @@ services:
     ports:
       - '8000:8000'
     environment:
-      # How much the app logs — both halves of it, the Flask API and the Rust
-      # simulation runtime. `debug` adds a line for every agent step and every
-      # round of state managers within a step; `trace` adds one per state manager
-      # call.
-      #
-      # Taken from your shell if you set it there, so `LOG_LEVEL=debug bin/main` is
-      # a one-off without editing anything. Docker puts a container's environment
-      # in place when it is created, so changing this recreates the app container
-      # rather than reloading it.
       - 'LOG_LEVEL=${LOG_LEVEL:-info}'
     volumes:
       - ./app/:/app/

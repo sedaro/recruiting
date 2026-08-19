@@ -7,8 +7,6 @@ from flask import Flask, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from modsim import AGENTS
-# NOTE: the simulation runtime is Rust. See `simulator/` for the query language,
-# the interpreter, and the runtime; `modsim.py` for the models it runs.
 from sedaro_nano_simulator import Simulator, init_tracing
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 import logging
@@ -19,14 +17,9 @@ class Base(DeclarativeBase):
 
 ############################## Logging ##############################
 
-# $LOG_LEVEL sets the level of both halves of this app: Python's `logging` here, and
-# the Rust runtime's `tracing` in `init_tracing`. Both write to stderr. `trace` and
-# `off` are the runtime's names, and mean the nearest thing `logging` has.
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").strip().upper()
 LOG_LEVEL = {"TRACE": "DEBUG", "OFF": "CRITICAL"}.get(LOG_LEVEL, LOG_LEVEL)
 
-# Nothing may log before this: the first call to `logging.warning` on a root logger
-# with no handlers installs one itself, and `basicConfig` then does nothing.
 logging.basicConfig(level=getattr(logging, LOG_LEVEL, logging.INFO))
 init_tracing()
 logging.info(f"Logging at $LOG_LEVEL={LOG_LEVEL}")
@@ -82,20 +75,15 @@ def simulate():
         init[key]["time"] = 0
         init[key]["timeStep"] = 100
 
-    # Create simulator. This parses every query the agents declare.
+    # Build a simulator
     simulator = Simulator(init, AGENTS)
 
     # Run simulation. Each frame is `[start, end, {agentId: state}]`, and holds the
     # one agent that stepped to it.
     frames = simulator.run()
 
-    # Simulation state is whatever the models in `modsim.py` built, so `default`
-    # covers a number that is not one Python's json knows — a `numpy.float32`, say.
-    # `sort_keys` writes the fields of a state in the same order however the agents'
-    # threads happened to fill them in.
-    data = json.dumps(frames, default=float, sort_keys=True)
-
     # Save data to database
+    data = json.dumps(frames, default=float, sort_keys=True)
     simulation = Simulation(data=data)
     db.session.add(simulation)
     db.session.commit()

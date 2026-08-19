@@ -18,15 +18,6 @@ processes:
     environment:
       # Where `bin/build` linked the extension module.
       - "PYTHONPATH=build"
-      # How much the app logs — both halves of it, the Flask API and the Rust
-      # simulation runtime. `debug` adds a line for every agent step and every
-      # round of state managers within a step; `trace` adds one per state manager
-      # call.
-      #
-      # Taken from your shell if you set it there, so `LOG_LEVEL=debug bin/main
-      # --dev` is a one-off without editing anything. An explicit entry here would
-      # otherwise win over the environment process-compose was started with, which
-      # is why this indirection is needed to make that work at all.
       - "LOG_LEVEL=${LOG_LEVEL:-info}"
     readiness_probe:
       http_get:
