@@ -1,0 +1,129 @@
+#!/usr/bin/env -S uv run --script
+## Name: build
+## Description: Compile the Rust simulator as a Python extension module and link it
+## to `build/sedaro_nano_simulator.so`, which is where the app imports it from and
+## what a running `bin/main --dev` watches. Arguments are passed to `cargo build`,
+## so any profile works. Run `build --help` for the usage.
+#
+# A uv script, like `bin/run`: the block below is all it takes to run, so this
+# needs neither `bin/setup` nor an activated virtualenv.
+#
+# /// script
+# # Not an ABI requirement — nothing here imports the extension module. It is the
+# # floor `bin/run` sets, repeated so uv resolves the same interpreter for both and
+# # caches one environment rather than fetching a second Python.
+# requires-python = ">=3.14"
+# dependencies = ["click~=8.4"]
+# ///
+
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+import click
+
+ROOT = Path(__file__).resolve().parent.parent
+# Cargo names a `cdylib` after the library (`libfoo.so`), but Python looks for a
+# file named after the module — and will not load a `.dylib` on macOS. One fixed
+# path, whatever the profile, so the app and its reloader only know this one.
+LINK = ROOT / "build" / "sedaro_nano_simulator.so"
+
+
+def cargo_library(cargo_arguments: tuple[str, ...]) -> Path:
+    """Build the extension module, and return the library cargo wrote."""
+    # `--lib` because the extension module is the only thing this crate builds that
+    # anything imports; `extension-module` so it does not link libpython, resolving
+    # those symbols from the interpreter that imports it instead. It must stay off
+    # for `cargo test`, which links a normal executable.
+    #
+    # Cargo files its output under a directory named after the profile, and only
+    # nightly can be asked to copy it somewhere fixed (`--artifact-dir`). So rather
+    # than reconstruct the path — and get it wrong for any profile we did not think
+    # of — ask cargo where it put the library. Only stdout is captured, so
+    # diagnostics still render to stderr as they happen.
+    process = subprocess.run(
+        [
+            "cargo",
+            "build",
+            "--lib",
+            "--features",
+            "extension-module",
+            "--manifest-path",
+            str(ROOT / "simulator" / "Cargo.toml"),
+            "--message-format=json-render-diagnostics",
+            *cargo_arguments,
+        ],
+        stdout=subprocess.PIPE,
+        text=True,
+        check=False,
+    )
+    if process.returncode != 0:
+        # Cargo has already said why, on stderr. Exiting with its status rather than
+        # one of our own is what makes `bin/build && bin/run` behave.
+        sys.exit(process.returncode)
+
+    # The last cdylib any of these messages mentions. Filtering on the target kind
+    # keeps proc-macro crates, which also build a `.so`, out of it.
+    library = None
+    for line in process.stdout.splitlines():
+        try:
+            message = json.loads(line)
+        except ValueError:
+            continue
+        if message.get("reason") != "compiler-artifact":
+            continue
+        if "cdylib" not in message.get("target", {}).get("kind", []):
+            continue
+        for filename in message.get("filenames", ()):
+            if filename.endswith((".so", ".dylib")):
+                library = Path(filename)
+
+    if library is None:
+        raise click.ClickException("cargo build produced no library, and did not say why.")
+    return library
+
+
+@click.command(
+    context_settings={
+        # `--release`, `--offline`, `-v`: cargo's options, not ours. Without this,
+        # click would reject them as unknown before cargo ever saw them.
+        "ignore_unknown_options": True,
+        "help_option_names": ["-h", "--help"],
+    },
+    # A `\b` keeps click from rewrapping the paragraph after it into one line.
+    epilog="\b\nExamples:\n"
+    "  build            a quick, unoptimised build\n"
+    "  build --release  a slow build that simulates fast",
+)
+@click.argument(
+    "cargo_arguments",
+    metavar="[CARGO BUILD ARGUMENTS]...",
+    nargs=-1,
+    type=click.UNPROCESSED,
+)
+def main(cargo_arguments: tuple[str, ...]) -> None:
+    """Compile the Rust simulator as a Python extension module.
+
+    Links it to build/sedaro_nano_simulator.so, which is where the app imports it
+    from and what a running `bin/main --dev` watches. Arguments are passed to
+    `cargo build`, so any profile works.
+    """
+    library = cargo_library(cargo_arguments)
+
+    LINK.parent.mkdir(parents=True, exist_ok=True)
+    # `unlink` does not follow a symlink, so the one an earlier profile left is
+    # replaced rather than written through — and a dangling one is no obstacle.
+    LINK.unlink(missing_ok=True)
+    LINK.symlink_to(library)
+
+    # Flask reloads when the file it watches gets a newer timestamp, and switching
+    # to a profile you built earlier would otherwise leave it running the other one.
+    os.utime(library)
+
+    click.echo(f"Linked {LINK.relative_to(ROOT)} -> {library}")
+
+
+if __name__ == "__main__":
+    main()
