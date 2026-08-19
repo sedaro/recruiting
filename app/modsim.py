@@ -160,7 +160,7 @@ DATA = {
         'timeStep': 100,
         'time': 0.0,
         'position': {'x': 60.34, 'y': 0, 'z': 0},
-        'velocity': {'x': 0, 'y': 0.13 , 'z': 0},
+        'velocity': {'x': 0, 'y': 0, 'z': 0.13},
         'mass': 0.123
     }
 }
