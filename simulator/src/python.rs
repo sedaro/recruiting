@@ -3,7 +3,7 @@
 use crate::sim;
 use pyo3::exceptions::{PyKeyError, PyRuntimeError};
 use pyo3::prelude::*;
-use pyo3::types::{PyDict, PyFloat, PyList, PyTuple};
+use pyo3::types::{PyDict, PyFloat, PyList, PyString, PyTuple};
 use std::fmt::Write as _;
 
 /// How many steps [`Simulator::run`] takes with each agent if it is not told.
@@ -41,24 +41,23 @@ impl Simulator {
     }
 
     /// Take `steps` steps with every agent and return every frame, including the
-    /// initial states, as `[[start, end, {agent_id: state}], ..]`. Each frame is one
-    /// agent's state, so the mapping holds a single entry.
+    /// initial states, as `[[start, end, agent_id, state], ..]`. Each frame is the state
+    /// one agent held over `[start, end)`.
     #[pyo3(signature = (steps = DEFAULT_STEPS))]
     fn run<'py>(&mut self, py: Python<'py>, steps: usize) -> PyResult<Bound<'py, PyList>> {
         self.inner.run(py, steps).map_err(simulation_error)?;
 
         let frames = PyList::empty(py);
         for frame in self.inner.frames() {
-            // A frame holds one agent, but it is handed over as a mapping so that a
-            // reader can treat every frame the same way, whichever agent it is for.
-            let states = PyDict::new(py);
-            states.set_item(&frame.agent, frame.state.bind(py))?;
+            // The agent is named in the frame rather than keyed by it: a frame is one
+            // agent's state, and a reader that wants them grouped can group them.
             frames.append(PyTuple::new(
                 py,
                 [
                     PyFloat::new(py, frame.start).into_any(),
                     PyFloat::new(py, frame.end).into_any(),
-                    states.into_any(),
+                    PyString::new(py, &frame.agent).into_any(),
+                    frame.state.bind(py).clone().into_any(),
                 ],
             )?)?;
         }
