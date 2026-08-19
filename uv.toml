@@ -1,0 +1,12 @@
+# uv's configuration for this project, which is one thing: where the packages in
+# `app/requirements.txt` come from.
+#
+# Saying so is what makes entering the dev shell reproducible. uv otherwise falls
+# back to `~/.config/uv/uv.toml`, so a developer who has a private index set as
+# their default — which is a normal thing to have — would watch `direnv allow`
+# fail on a 401 for `flask`. A project-level config takes precedence over the
+# user-level one, which is exactly what it is for.
+
+[[index]]
+default = true
+url = "https://pypi.org/simple"
