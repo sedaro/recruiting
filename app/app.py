@@ -80,7 +80,7 @@ def simulate():
     init: dict = request.json
     for key in init.keys():
         init[key]["time"] = 0
-        init[key]["timeStep"] = 0.01
+        init[key]["timeStep"] = 100
 
     # Create simulator. This parses every query the agents declare.
     simulator = Simulator(init, AGENTS)
