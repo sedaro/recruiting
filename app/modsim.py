@@ -49,11 +49,18 @@ Query syntax:
 - `<variableName>` will do a dictionary lookup of `variableName` in the current state of the agent
    the query is running for.
 - prev!(<query>)` will get the value of `query` from the previous step of simulation.
-- `agent!(<agentId>)` will get the most recent state produced by `agentId`.
+- `agent!(<agentId>)` will get the most recent state produced by `agentId`. Agents run in
+   parallel, and a step waits until none of them is behind the time it is stepping from,
+   so this is `agentId`'s state at that time or the one step after it.
 - `<query>.<name>` will evaluate `query` and then look up `name` in the resulting dictionary.
+- `consumed` is always a tuple of the function's arguments, in order. A tuple of one needs its
+   trailing comma: `(velocity,)`.
+- `produced` is usually one query, and the function returns the value for it. It may also be a
+   tuple, and then the function returns one value per element: `(velocity, mass,)` for a
+   function whose `return` is `velocity, mass`.
 '''
 
-agents = {
+AGENTS = {
     'Body1': [
         {
             'consumed': '''(
@@ -141,7 +148,7 @@ agents = {
 }
 
 # NOTE: initial values are set here. we intentionally separate the data from the functions operating on it.
-data = {
+DATA = {
     'Body1': {
         'timeStep': 0.01,
         'time': 0.0,
