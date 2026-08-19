@@ -34,44 +34,41 @@ Included in this directory is a tiny mockup of Sedaro's system. Though it techni
 
 Here are some suggestions to get you thinking:
 
-#### Frontend/full-stack
+### Frontend/full-stack
 - Improve interactivity, for example live-streaming the simulation and allowing users to control the playback speed during the simulation
 - Improve alignment with accessibility standards
 - Elegantly support creating and managing many agents
 - Support running a series of simulations with varying parameters and displaying the results
 
-#### Backend
+### Backend
 - Add unique patterns of user engagement
 - Create a more scalable storage solution than a JSON string in one DB row
 - Do some statistical analysis on the data
 - Set up background jobs to preprocess data
 - Incorporate computational optimizations (e.g. linear programming)
 
-#### DevOps
+### DevOps
 - Integrate observability tooling and use it to performance profile the application
 - Improve the availability of the application using clustering and infrastructure as code
 - Write the "supreme pizza" version of a CI/CD pipeline
 - Analyze and minimize the attack surface of the application without constraining development
 
-#### Workflows
+### Workflows
 - Set up background jobs to preprocess data
 - Integrate observability tooling and use it to performance profile the application
 - Improve the availability of the application using clustering and infrastructure as code
 - Create a more scalable storage solution than a JSON string in one DB row
 
-#### Modeling & Simulation
+### Modeling & Simulation
 - Improve the numerical stability of the simulation functions
 - Implement additional modeling and simulation scope
 - Analyze the sensitivity to initial conditions
 
-#### Compiler & Runtime
-- Speed up either buildtime or runtime
-- "Compile" the query language which is currently interpreted
-- Make simulations deterministic
-- Parallelize simulation execution
-- Expand the query language
-- Expand the simulation semantics beyond simple pure functions
-- Improve the Q-Range KV Store data structure
+### Compiler & Runtime
+- Improve the performance or scalability of either buildtime or runtime
+- Add new capabilities or semantics to the simulator or query language
+- Improve QA for either developers or users of the simulator
+- Strengthen the simulator's interfaces or guarantees
 
 ![](./files/screenshot2.png)
 
