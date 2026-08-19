@@ -1,7 +1,7 @@
 #!/usr/bin/env -S uv run --script
 ## Name: build
 ## Description: Compile the Rust simulator as a Python extension module and link it
-## to `build/sedaro_nano_simulator.so`, which is where the app imports it from and
+## to `build/simulator.so`, which is where the app imports it from and
 ## what a running `bin/main --dev` watches. Arguments are passed to `cargo build`,
 ## so any profile works. Run `build --help` for the usage.
 #
@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 # Cargo names a `cdylib` after the library (`libfoo.so`), but Python looks for a
 # file named after the module — and will not load a `.dylib` on macOS. One fixed
 # path, whatever the profile, so the app and its reloader only know this one.
-LINK = ROOT / "build" / "sedaro_nano_simulator.so"
+LINK = ROOT / "build" / "simulator.so"
 
 
 def cargo_library(cargo_arguments: tuple[str, ...]) -> Path:
@@ -106,7 +106,7 @@ def cargo_library(cargo_arguments: tuple[str, ...]) -> Path:
 def main(cargo_arguments: tuple[str, ...]) -> None:
     """Compile the Rust simulator as a Python extension module.
 
-    Links it to build/sedaro_nano_simulator.so, which is where the app imports it
+    Links it to build/simulator.so, which is where the app imports it
     from and what a running `bin/main --dev` watches. Arguments are passed to
     `cargo build`, so any profile works.
     """

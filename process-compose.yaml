@@ -14,7 +14,7 @@ processes:
     # `--debug` reloads on Python edits, as the container does; `--extra-files`
     # adds the compiled simulator to what it watches, so `cargo build --release`
     # reloads the app too.
-    command: .venv/bin/python -m flask --app app/app.py run --debug --extra-files build/sedaro_nano_simulator.so --port 8000
+    command: .venv/bin/python -m flask --app app/app.py run --debug --extra-files build/simulator.so --port 8000
     environment:
       # Where `bin/build` linked the extension module.
       - "PYTHONPATH=build"

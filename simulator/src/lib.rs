@@ -8,7 +8,7 @@
 //! - [`query`] — the query language: syntax, AST, and parser.
 //! - [`interp`] — resolving queries against agent state.
 //! - [`sim`] — the runtime: it builds agents and runs each in its own thread.
-//! - [`python`] — the pyo3 boundary, exported as the `sedaro_nano_simulator` module.
+//! - [`python`] — the pyo3 boundary, exported as the `simulator` module.
 //! - [`trace`] — what the runtime logs, and where.
 
 pub mod interp;

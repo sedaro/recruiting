@@ -109,7 +109,7 @@
               export PATH="$root/bin:$PATH"
 
               # `bin/build` links the extension module into `build/`, so
-              # `import sedaro_nano_simulator` works from anywhere in the repo.
+              # `import simulator` works from anywhere in the repo.
               export PYTHONPATH="$root/build:$PYTHONPATH"
 
               # Set up (and activate) a local virtualenv. The Python packages come

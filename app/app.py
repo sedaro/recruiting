@@ -7,7 +7,7 @@ from flask import Flask, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from modsim import AGENTS
-from sedaro_nano_simulator import Simulator, init_tracing
+from simulator import Simulator, init_tracing
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 import logging
 

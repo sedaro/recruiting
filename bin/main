@@ -36,8 +36,8 @@ fi
 
 # The app imports this. `bin/build` puts it there, with any profile you like, and a
 # running app reloads each time you build again.
-if [ ! -e build/sedaro_nano_simulator.so ]; then
-  echo "build/sedaro_nano_simulator.so does not exist. Run \`bin/build\` first." >&2
+if [ ! -e build/simulator.so ]; then
+  echo "build/simulator.so does not exist. Run \`bin/build\` first." >&2
   exit 1
 fi
 

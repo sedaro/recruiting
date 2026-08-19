@@ -24,13 +24,13 @@ RUN pip3 install -r requirements.txt
 
 COPY app .
 
-# The simulation runtime, importable as `sedaro_nano_simulator`. Cargo names a
+# The simulation runtime, importable as `simulator`. Cargo names a
 # `cdylib` after the library; Python needs it named after the module. It lives
 # outside `/app` because docker compose bind-mounts the host's `app/` over that,
 # which would hide anything the image put there.
 COPY --from=builder \
-  /simulator/target/release/libsedaro_nano_simulator.so \
-  /build/sedaro_nano_simulator.so
+  /simulator/target/release/libsimulator.so \
+  /build/simulator.so
 ENV PYTHONPATH=/build
 
 CMD [ "python3", "-m" , "flask", "run", "--debug", "--host=0.0.0.0", "--port=8000" ]

@@ -1,5 +1,5 @@
 [package]
-name = "sedaro-nano-simulator"
+name = "simulator"
 version = "0.0.0"
 edition = "2024"
 rust-version = "1.97.1"
@@ -7,7 +7,6 @@ license = "LicenseRef-Sedaro"
 publish = false
 
 [lib]
-name = "sedaro_nano_simulator"
 # `cdylib` is the Python extension module that `app/` imports; `rlib` keeps the
 # crate usable as a normal Rust library, which is what `cargo test` links.
 crate-type = ["cdylib", "rlib"]

@@ -5,7 +5,7 @@
 //! which makes it the one test in the crate that runs without an interpreter.
 #![allow(clippy::expect_used)]
 
-use sedaro_nano_simulator::query::Query;
+use simulator::query::Query;
 
 #[test]
 fn parses_a_consumed_query() {

@@ -8,7 +8,7 @@
 use pyo3::ffi::c_str;
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
-use sedaro_nano_simulator::sim::{Agent, Simulator, StateManager};
+use simulator::sim::{Agent, Simulator, StateManager};
 use std::ffi::CStr;
 
 /// Adds up whatever it is given: a clock, or a position that moves.

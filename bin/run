@@ -25,7 +25,7 @@ from pathlib import Path
 import click
 
 ROOT = Path(__file__).resolve().parent.parent
-LIBRARY = ROOT / "build" / "sedaro_nano_simulator.so"
+LIBRARY = ROOT / "build" / "simulator.so"
 
 # Where `bin/build` links the extension module, and where the model lives. The API
 # gets both from its working directory and `$PYTHONPATH`; this is run from wherever
@@ -67,7 +67,7 @@ def main(steps: int | None) -> None:
     # `--help` — the one thing this script can usefully do before `bin/build` has
     # ever run. The `sys.path` setup above is what makes them importable at all.
     from modsim import AGENTS, DATA
-    from sedaro_nano_simulator import Simulator, init_tracing
+    from simulator import Simulator, init_tracing
 
     # The same call `app/app.py` makes, so `$LOG_LEVEL` means here what it means
     # there — including the `built` and `simulated` lines below, which are the

@@ -1,4 +1,4 @@
-//! The Python boundary: the `sedaro_nano_simulator` extension module.
+//! The Python boundary: the `simulator` extension module.
 
 use crate::sim;
 use pyo3::exceptions::{PyKeyError, PyRuntimeError};
@@ -10,7 +10,7 @@ use std::fmt::Write as _;
 const DEFAULT_STEPS: usize = 1000;
 
 /// The simulator, as `app/` sees it.
-#[pyclass(module = "sedaro_nano_simulator")]
+#[pyclass(module = "simulator")]
 pub struct Simulator {
     inner: sim::Simulator,
 }
@@ -114,7 +114,7 @@ fn init_tracing() {
 }
 
 #[pymodule]
-fn sedaro_nano_simulator(module: &Bound<'_, PyModule>) -> PyResult<()> {
+fn simulator(module: &Bound<'_, PyModule>) -> PyResult<()> {
     module.add_class::<Simulator>()?;
     module.add_function(wrap_pyfunction!(init_tracing, module)?)?;
     Ok(())
