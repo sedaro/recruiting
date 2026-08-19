@@ -1,5 +1,5 @@
 # Debian-based node base image
-FROM node:20-bookworm
+FROM node:24-bookworm
 
 # Add `/web/node_modules/.bin` to $PATH
 ENV PATH /web/node_modules/.bin:$PATH

@@ -1,4 +1,6 @@
-flask~=3.0
-flask-cors~=5.0.0
-Flask-SQLAlchemy~=3.0
-numpy~=2.1.2
+flask~=3.1
+flask-cors~=6.0
+Flask-SQLAlchemy~=3.1
+# 2.3.2 was the first release with wheels for Python 3.14, so the floor cannot go
+# far below this without sending pip off to compile numpy from source.
+numpy~=2.5

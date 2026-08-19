@@ -1,4 +1,4 @@
-FROM rust:1.84 AS builder
+FROM rust:1.97.1 AS builder
 
 RUN mkdir /queries
 WORKDIR /queries
@@ -8,7 +8,7 @@ RUN cargo clean
 RUN cargo build --release
 
 # Running python
-FROM python:3.12
+FROM python:3.14
 
 # Create and set working directory
 RUN mkdir /app
