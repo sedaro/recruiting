@@ -72,3 +72,5 @@ Finally, we need to add the data we're reading from the other agent. This also n
                 agent!(Body2).mass,
             )''',
 ```
+
+That runs without error, and the plot it draws is not an orbit: once both bodies pull on each other, forward Euler at this time step sends the pair flying apart instead of settling. The model is at fault rather than your query, and how much of that you care to fix is up to you.
