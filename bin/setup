@@ -1,0 +1,42 @@
+#!/usr/bin/env sh
+## Name: setup
+## Description: Create the virtualenv the app runs in and install
+## `app/requirements.txt` into it. Run it whenever: it does only the work that is
+## missing, so it is also how you pick up a change to the requirements.
+## Usage: setup
+
+set -e # Exit on error
+set -u # Treat unset variables as error
+
+SCRIPT_PATH="$0"
+SCRIPT_DIR=$(cd "$(dirname "$SCRIPT_PATH")" && pwd)
+cd "$SCRIPT_DIR/.."
+
+# The floor the simulator's `abi3-py314` build sets: an extension module built
+# against 3.14 will not load on anything older. uv finds an interpreter this new,
+# or fetches one — which is why nothing here asks you to install Python. Inside
+# the nix dev shell, `UV_NO_MANAGED_PYTHON` points it at the one nix provides
+# instead, so both setups end up on the same interpreter.
+PYTHON_VERSION=3.14
+VENV=.venv
+
+# `uv venv` refuses to touch a virtualenv that already exists, so decide up front
+# whether the one already here is usable. This asks the interpreter itself rather
+# than comparing version strings, which also catches a venv whose interpreter has
+# gone away — a nix store path that has been garbage collected, say — because then
+# it does not answer at all.
+if [ -d "$VENV" ] && ! "$VENV/bin/python" -c \
+  "import sys; sys.exit(0 if sys.version_info[:2] >= (3, 14) else 1)" 2> /dev/null; then
+  echo "Virtual environment is not a working Python $PYTHON_VERSION or newer. Replacing it..."
+  rm -rf "$VENV"
+fi
+
+if [ ! -d "$VENV" ]; then
+  uv venv --python="$PYTHON_VERSION" "$VENV"
+fi
+
+# Idempotent on its own: uv resolves the requirements and installs what is
+# missing, so this is close to instant once the venv already matches.
+uv pip install --python "$VENV/bin/python" --requirement app/requirements.txt
+
+echo "$VENV is ready, with $("$VENV/bin/python" -V)."

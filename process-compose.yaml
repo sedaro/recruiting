@@ -1,0 +1,51 @@
+# Runs Sedaro Nano locally the way `docker compose` runs it in containers: the
+# Flask API on port 8000 and the frontend on port 3030, but as plain processes on
+# your machine. Started by `bin/main --dev`, once `bin/build` has compiled the simulator.
+#
+# See https://github.com/F1bonacc1/process-compose
+version: "0.5"
+
+processes:
+  api:
+    description: The Flask API, from app/app.py
+    # The repo root, so that the interpreter `bin/setup` built is named by a path
+    # with no `..` in it — Python warns about the ones that have.
+    working_dir: .
+    # `--debug` reloads on Python edits, as the container does; `--extra-files`
+    # adds the compiled simulator to what it watches, so `cargo build --release`
+    # reloads the app too.
+    command: .venv/bin/python -m flask --app app/app.py run --debug --extra-files build/sedaro_nano_simulator.so --port 8000
+    environment:
+      # Where `bin/build` linked the extension module.
+      - "PYTHONPATH=build"
+      # How much the app logs — both halves of it, the Flask API and the Rust
+      # simulation runtime. `debug` adds a line for every agent step and every
+      # round of state managers within a step; `trace` adds one per state manager
+      # call.
+      #
+      # Taken from your shell if you set it there, so `LOG_LEVEL=debug bin/main
+      # --dev` is a one-off without editing anything. An explicit entry here would
+      # otherwise win over the environment process-compose was started with, which
+      # is why this indirection is needed to make that work at all.
+      - "LOG_LEVEL=${LOG_LEVEL:-info}"
+    readiness_probe:
+      http_get:
+        host: 127.0.0.1
+        scheme: http
+        path: /
+        port: "8000"
+      initial_delay_seconds: 1
+      period_seconds: 1
+      failure_threshold: 60
+
+  web:
+    description: The frontend, on http://localhost:3030
+    working_dir: web
+    # `npm start` cannot run on a fresh checkout without the install, which is
+    # quick once `node_modules` already matches the lock file.
+    command: npm install && npm start
+    # The page fetches its data the moment it loads, so there is nothing to be
+    # gained by serving it before the API can answer.
+    depends_on:
+      api:
+        condition: process_healthy
