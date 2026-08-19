@@ -40,7 +40,7 @@ const SimulateForm: React.FC = () => {
 
   const [formData, setFormData] = useState<FormData>({
     Body1: { position: {x: -0.73, y: 0, z: 0}, velocity: {x: 0, y: -0.0015, z: 0}, mass: 1 },
-    Body2: { position: {x: 60.34, y: 0, z: 0}, velocity: {x: 0, y: 0, z: 0.13}, mass: 0.0123 },
+    Body2: { position: {x: 60.34, y: 0, z: 0}, velocity: {x: 0, y: 0, z: 0.13}, mass: 0.123 },
   });
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
