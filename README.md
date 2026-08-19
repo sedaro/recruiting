@@ -13,6 +13,8 @@ Submissions are evaluated on whether they:
 
 The project is due within **7 days** of receipt and we expect you to spend no more than **6 hours** on it. If you have any questions, issues, or if you get stuck, please contact Kacie at `kacie.neurohr@sedaro.com`.
 
+![](./files/screenshot3.png)
+
 ## Submission
 Please submit a `.zip` file including:
 - The **code** (excluding temporary or .gitignored files and directories, such as `__pycache__`, `node_modules`, `target`, or any local virtual environments)
@@ -69,8 +71,6 @@ Here are some suggestions to get you thinking:
 - Add new capabilities or semantics to the simulator or query language
 - Improve QA for either developers or users of the simulator
 - Strengthen the simulator's interfaces or guarantees
-
-![](./files/screenshot2.png)
 
 ## Setup
 Clone this repository.
