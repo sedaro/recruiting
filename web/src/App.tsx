@@ -7,7 +7,7 @@ import { Routes } from 'routes';
 // Input data from the simulation
 type AgentData = Record<string, Record<string, number>>;
 type DataFrame = Record<string, AgentData>;
-type DataPoint = [number, number, DataFrame];
+type DataPoint = [number, number, string, AgentData];
 
 // Output data to the plot
 type PlottedAgentData = Record<string, number[]>;
@@ -37,7 +37,14 @@ const App = () => {
         // NOTE: Uncomment to see the raw data in the console
         // console.log('Data:', data);
 
-        setInitialState(data[0][2]);
+        // A frame holds one agent, and the ones an agent started in are the frames
+        // that begin and end at the same time: nothing stepped to them. Together
+        // they are the state the simulation started from.
+        const initial: DataFrame = {};
+        data.forEach(([t0, t1, agentId, state]) => {
+          if (t0 === t1) initial[agentId] = state;
+        });
+        setInitialState(initial);
 
         const baseData = () => ({
           x: [],
@@ -49,22 +56,17 @@ const App = () => {
           line: { width: 2 },
         });
 
-        data.forEach(([t0, t1, frame]) => {
-          for (let [agentId, val] of Object.entries(frame)) {
-              if (agentId == "time" || agentId == "timeStep") {
-                continue;
-              }
-              let {position, velocity} = val;
-              updatedPositionData[agentId] = updatedPositionData[agentId] || baseData();
-              updatedPositionData[agentId].x.push(position.x);
-              updatedPositionData[agentId].y.push(position.y);
-              updatedPositionData[agentId].z.push(position.z);
+        data.forEach(([t0, t1, agentId, state]) => {
+          let {position, velocity} = state;
+          updatedPositionData[agentId] = updatedPositionData[agentId] || baseData();
+          updatedPositionData[agentId].x.push(position.x);
+          updatedPositionData[agentId].y.push(position.y);
+          updatedPositionData[agentId].z.push(position.z);
 
-              updatedVelocityData[agentId] = updatedVelocityData[agentId] || baseData();
-              updatedVelocityData[agentId].x.push(velocity.x);
-              updatedVelocityData[agentId].y.push(velocity.y);
-              updatedVelocityData[agentId].z.push(velocity.z);
-          }
+          updatedVelocityData[agentId] = updatedVelocityData[agentId] || baseData();
+          updatedVelocityData[agentId].x.push(velocity.x);
+          updatedVelocityData[agentId].y.push(velocity.y);
+          updatedVelocityData[agentId].z.push(velocity.z);
         });
         setPositionData(Object.values(updatedPositionData));
         setVelocityData(Object.values(updatedVelocityData));
@@ -101,11 +103,11 @@ const App = () => {
             style={{ width: '45%', height: '100%', margin: '5px' }}
             data={positionData}
             layout={{
-              title: 'Position',
+              title: { text: 'Position' },
               scene: {
-                xaxis: { title: 'X' },
-                yaxis: { title: 'Y' },
-                zaxis: { title: 'Z' },
+                xaxis: { title: { text: 'X' } },
+                yaxis: { title: { text: 'Y' } },
+                zaxis: { title: { text: 'Z' } },
               },
               autosize: true,
               dragmode: 'turntable',
@@ -119,11 +121,11 @@ const App = () => {
             style={{ width: '45%', height: '100%', margin: '5px' }}
             data={velocityData}
             layout={{
-              title: 'Velocity',
+              title: { text: 'Velocity' },
               scene: {
-                xaxis: { title: 'X' },
-                yaxis: { title: 'Y' },
-                zaxis: { title: 'Z' },
+                xaxis: { title: { text: 'X' } },
+                yaxis: { title: { text: 'Y' } },
+                zaxis: { title: { text: 'Z' } },
               },
               autosize: true,
               dragmode: 'turntable',

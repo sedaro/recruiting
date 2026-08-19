@@ -1,0 +1,44 @@
+#!/usr/bin/env sh
+## Name: main
+## Description: Run Sedaro Nano. In Docker by default; with `--dev`, as local
+## processes via process-compose. Either way the app is at http://localhost:3030
+## and its API at http://localhost:8000.
+## Usage: main [--dev] [extra arguments for docker compose / process-compose]
+
+set -e # Exit on error
+set -u # Treat unset variables as error
+
+SCRIPT_PATH="$0"
+SCRIPT_DIR=$(cd "$(dirname "$SCRIPT_PATH")" && pwd)
+cd "$SCRIPT_DIR/.."
+
+if [ "${1:-}" = "--help" ] || [ "${1:-}" = "-h" ]; then
+  echo "Usage: $0 [--dev] [extra arguments]"
+  echo "  (no arguments)  run the app with Docker Compose"
+  echo "  --dev           run the app with process-compose, per process-compose.yaml"
+  exit 0
+fi
+
+if [ "${1:-}" != "--dev" ]; then
+  # `--build` every time: the Rust simulator is compiled into the image, so this
+  # is what picks up a change to it. Cached layers make it cheap when nothing has.
+  exec docker compose up --build "$@"
+fi
+
+shift
+
+if ! command -v process-compose > /dev/null 2>&1; then
+  echo "process-compose is not on your PATH." >&2
+  echo "Install it from https://github.com/F1bonacc1/process-compose#installation," >&2
+  echo "or run \`direnv allow\`, which provides it." >&2
+  exit 1
+fi
+
+# The app imports this. `bin/build` puts it there, with any profile you like, and a
+# running app reloads each time you build again.
+if [ ! -e build/simulator.so ]; then
+  echo "build/simulator.so does not exist. Run \`bin/build\` first." >&2
+  exit 1
+fi
+
+exec process-compose "$@"

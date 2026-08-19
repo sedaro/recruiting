@@ -1,0 +1,3 @@
+# Code is formatted to this width. Prose in comments is wrapped by hand, because
+# rustfmt does not reflow it.
+max_width = 120

@@ -1,0 +1,87 @@
+#!/usr/bin/env -S uv run --script
+## Name: run
+## Description: Propagate the model in `app/modsim.py` with no web server in the
+## way. It imports the extension module `bin/build` linked into `build/` and calls
+## the same `Simulator` the API calls, so what it exercises is a request to
+## `POST /simulation` minus Flask, the database and the JSON. Run `run --help` for
+## the usage.
+#
+# A uv script, like `bin/build`: the block below is all it takes to run, so this
+# needs neither `bin/setup` nor an activated virtualenv — but it does need
+# `bin/build`, because the thing being run is the compiled runtime and not a copy
+# of it.
+#
+# /// script
+# requires-python = ">=3.14"
+# # `app/modsim.py` imports numpy. The constraint that matters is the one in
+# # `app/requirements.txt`; PEP 723 has no way to point at a requirements file, so
+# # this is the single line of it that is written down twice.
+# dependencies = ["click~=8.4", "numpy~=2.5"]
+# ///
+
+import sys
+from pathlib import Path
+
+import click
+
+ROOT = Path(__file__).resolve().parent.parent
+LIBRARY = ROOT / "build" / "simulator.so"
+
+# Where `bin/build` links the extension module, and where the model lives. The API
+# gets both from its working directory and `$PYTHONPATH`; this is run from wherever
+# you happen to be, so it says where they are itself.
+sys.path[:0] = [str(LIBRARY.parent), str(ROOT / "app")]
+
+
+@click.command(
+    context_settings={"help_option_names": ["-h", "--help"]},
+    # A `\b` keeps click from rewrapping the paragraph after it into one line.
+    epilog="\b\nExamples:\n"
+    "  run                    propagate, and report what it cost\n"
+    "  run --steps 100        take a set number of steps with every agent\n"
+    "  LOG_LEVEL=debug run    ...with a line per agent step and per round",
+)
+@click.option(
+    "--steps",
+    type=int,
+    # Left to the binding, so that the number of steps a simulation takes by
+    # default is written down once, where the API gets it from too.
+    default=None,
+    help="how many steps to take with every agent; each agent runs in a thread of "
+    "its own, waiting only when a query reads an agent that is behind it",
+)
+def main(steps: int | None) -> None:
+    """Propagate the model in app/modsim.py, with no web server in the way.
+
+    It imports the extension module `bin/build` linked into build/ and calls the
+    same Simulator the API calls, so what it exercises is a request to
+    `POST /simulation` minus Flask, the database and the JSON.
+    """
+    if not LIBRARY.exists():
+        # Before the imports, which would otherwise fail with a
+        # `ModuleNotFoundError` naming a module the reader has no reason to know is
+        # a build artifact.
+        raise click.ClickException(f"{LIBRARY} does not exist. Run `bin/build` first.")
+
+    # Imported here rather than at the top for the sake of the check above, and of
+    # `--help` — the one thing this script can usefully do before `bin/build` has
+    # ever run. The `sys.path` setup above is what makes them importable at all.
+    from modsim import AGENTS, DATA
+    from simulator import Simulator, init_tracing
+
+    # The same call `app/app.py` makes, so `$LOG_LEVEL` means here what it means
+    # there — including the `built` and `simulated` lines below, which are the
+    # runtime's own and the reason this script reports nothing itself.
+    init_tracing()
+
+    # The frames it returns are thrown away: what is being exercised is the
+    # propagation, and `$LOG_LEVEL` is how you look inside it.
+    simulator = Simulator(DATA, AGENTS)
+    if steps is None:
+        simulator.run()
+    else:
+        simulator.run(steps)
+
+
+if __name__ == "__main__":
+    main()

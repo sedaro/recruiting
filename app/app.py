@@ -1,18 +1,28 @@
 # HTTP SERVER
 
 import json
+import os
 
 from flask import Flask, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from simulator import Simulator
+from modsim import AGENTS
+from simulator import Simulator, init_tracing
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from store import QRangeStore
 import logging
-from datetime import datetime
 
 class Base(DeclarativeBase):
     pass
+
+
+############################## Logging ##############################
+
+LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").strip().upper()
+LOG_LEVEL = {"TRACE": "DEBUG", "OFF": "CRITICAL"}.get(LOG_LEVEL, LOG_LEVEL)
+
+logging.basicConfig(level=getattr(logging, LOG_LEVEL, logging.INFO))
+init_tracing()
+logging.info(f"Logging at $LOG_LEVEL={LOG_LEVEL}")
 
 
 ############################## Application Configuration ##############################
@@ -23,8 +33,6 @@ CORS(app, origins=["http://localhost:3030"])
 db = SQLAlchemy(model_class=Base)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 db.init_app(app)
-
-logging.basicConfig(level=logging.INFO)
 
 ############################## Database Models ##############################
 
@@ -57,8 +65,8 @@ def get_data():
 def simulate():
     # Get data from request in this form
     # init = {
-    #     "Body1": {"x": 0, "y": 0.1, "vx": 0.1, "vy": 0},
-    #     "Body2": {"x": 0, "y": 1, "vx": 1, "vy": 0},
+    #     "Body1": {"position": {"x": 0, "y": 0.1, "z": 0}, "velocity": {...}, "mass": 1},
+    #     "Body2": {"position": {"x": 0, "y": 1, "z": 0}, "velocity": {...}, "mass": 0.1},
     # }
 
     # Define time and timeStep for each agent
@@ -67,20 +75,16 @@ def simulate():
         init[key]["time"] = 0
         init[key]["timeStep"] = 0.01
 
-    # Create store and simulator
-    t = datetime.now()
-    store = QRangeStore()
-    simulator = Simulator(store=store, init=init)
-    logging.info(f"Time to Build: {datetime.now() - t}")
+    # Build a simulator
+    simulator = Simulator(init, AGENTS)
 
-    # Run simulation
-    t = datetime.now()
-    simulator.simulate()
-    logging.info(f"Time to Simulate: {datetime.now() - t}")
+    # Run simulation. Each frame is `[start, end, agentId, state]`.
+    frames = simulator.run()
 
     # Save data to database
-    simulation = Simulation(data=json.dumps(store.store))
+    data = json.dumps(frames, default=float, sort_keys=True)
+    simulation = Simulation(data=data)
     db.session.add(simulation)
     db.session.commit()
 
-    return store.store
+    return app.response_class(data, mimetype="application/json")

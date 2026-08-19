@@ -1,0 +1,62 @@
+[package]
+name = "simulator"
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.97.1"
+license = "LicenseRef-Sedaro"
+publish = false
+
+[lib]
+# `cdylib` is the Python extension module that `app/` imports; `rlib` keeps the
+# crate usable as a normal Rust library, which is what `cargo test` links.
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# The Python boundary. `abi3-py314` builds against the stable ABI, so one `.so`
+# works on CPython >= 3.14 and the build needs no interpreter of its own.
+pyo3 = { version = "0.29", features = ["abi3-py314"] }
+# Instrumentation. `tracing` is the facade the runtime records against: with no
+# subscriber installed, or with one that filters our level out, a call site costs
+# an atomic load and does not evaluate its fields — which is what makes it safe
+# to put a `debug!` in the middle of the step loop.
+tracing = "0.1"
+# The subscriber, installed by `src/trace.rs`.
+tracing-subscriber = "0.3"
+
+[dev-dependencies]
+# `auto-initialize` starts an interpreter for the tests that cross the pyo3
+# boundary. It is deliberately dev-only: an extension module must never start an
+# interpreter, it is always already inside one.
+pyo3 = { version = "0.29", features = ["auto-initialize"] }
+
+[build-dependencies]
+# See `build.rs`: this only exists to emit the linker arguments macOS needs when
+# building the extension module.
+pyo3-build-config = "0.29"
+
+[features]
+# Enabled when building the extension module (see `bin/build`) so the `.so`
+# resolves Python symbols from the host interpreter instead of linking libpython.
+# It must stay off for `cargo test`, whose test binary starts an interpreter of its
+# own and so links libpython like any other executable would.
+extension-module = ["pyo3/extension-module"]
+
+[lints.rust]
+unreachable_pub = "warn"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+# A simulation error is always on its way to a Python traceback, so panicking would
+# turn a bad model into a dead worker process instead of a 500. Test code says so for
+# itself: `[lints]` cannot be conditional on `cfg(test)`, so each test target allows
+# these two where it needs them.
+expect_used = "deny"
+indexing_slicing = "deny"
+panic = "deny"
+unwrap_used = "deny"
+# Pedantic lints we do not hold this crate to. `float_cmp` is here rather than in the
+# tests because comparing a float exactly is what a test of a simulation does.
+float_cmp = { level = "allow", priority = 1 }
+missing_errors_doc = { level = "allow", priority = 1 }
+missing_panics_doc = { level = "allow", priority = 1 }
+must_use_candidate = { level = "allow", priority = 1 }

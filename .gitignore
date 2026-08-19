@@ -6,3 +6,8 @@
 **/.vscode
 **/instance
 **/database.db
+**/target
+# Where `bin/build` puts the extension module.
+/build
+.direnv
+result

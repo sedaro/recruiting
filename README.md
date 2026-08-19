@@ -13,6 +13,8 @@ Submissions are evaluated on whether they:
 
 The project is due within **7 days** of receipt and we expect you to spend no more than **6 hours** on it. If you have any questions, issues, or if you get stuck, please contact Kacie at `kacie.neurohr@sedaro.com`.
 
+![](./files/screenshot3.png)
+
 ## Submission
 Please submit a `.zip` file including:
 - The **code** (excluding temporary or .gitignored files and directories, such as `__pycache__`, `node_modules`, `target`, or any local virtual environments)
@@ -34,82 +36,73 @@ Included in this directory is a tiny mockup of Sedaro's system. Though it techni
 
 Here are some suggestions to get you thinking:
 
-#### Frontend/full-stack
+### Frontend/full-stack
 - Improve interactivity, for example live-streaming the simulation and allowing users to control the playback speed during the simulation
 - Improve alignment with accessibility standards
 - Elegantly support creating and managing many agents
 - Support running a series of simulations with varying parameters and displaying the results
 
-#### Backend
+### Backend
 - Add unique patterns of user engagement
 - Create a more scalable storage solution than a JSON string in one DB row
 - Do some statistical analysis on the data
 - Set up background jobs to preprocess data
 - Incorporate computational optimizations (e.g. linear programming)
 
-#### DevOps
+### DevOps
 - Integrate observability tooling and use it to performance profile the application
 - Improve the availability of the application using clustering and infrastructure as code
 - Write the "supreme pizza" version of a CI/CD pipeline
 - Analyze and minimize the attack surface of the application without constraining development
 
-#### Workflows
+### Workflows
 - Set up background jobs to preprocess data
 - Integrate observability tooling and use it to performance profile the application
 - Improve the availability of the application using clustering and infrastructure as code
 - Create a more scalable storage solution than a JSON string in one DB row
 
-#### Modeling & Simulation
+### Modeling & Simulation
 - Improve the numerical stability of the simulation functions
 - Implement additional modeling and simulation scope
 - Analyze the sensitivity to initial conditions
 
-#### Compiler & Runtime
-- Speed up either buildtime or runtime
-- "Compile" the query language which is currently interpreted
-- Make simulations deterministic
-- Parallelize simulation execution
-- Expand the query language
-- Expand the simulation semantics beyond simple pure functions
-- Improve the Q-Range KV Store data structure
-
-![](./files/screenshot2.png)
+### Compiler & Runtime
+- Improve the performance or scalability of either buildtime or runtime
+- Add new capabilities or semantics to the simulator or query language
+- Improve QA for either developers or users of the simulator
+- Strengthen the simulator's interfaces or guarantees
 
 ## Setup
-1. Clone this repository.
-   - Please note that **only** cloning via HTTPS is supported
-   - Please **do not** commit changes to any branch of this repository. If you would like to use git, you may fork this repository to create a private repo of your own
-2. Ensure that Docker is installed and running. To compile and run the app, execute the following command
-   - `docker compose up --build`
-   - Ensure your localhost ports `3030` and `8000` are available first.
-3. That's it ✅! Sedaro Nano should now be available via web browser at http://localhost:3030/. The API is running at http://localhost:8000/.
-   - It may take a few moments for the container to fully come up and serve the page.
-   - Changes to both the React app and the Flask app should auto reload.
+Clone this repository.
+- Please note that **only** cloning via HTTPS is supported
+- Please **do not** commit changes to any branch of this repository. If you would like to use git, you may fork this repository to create a private repo of your own
 
-### Directory Structure
-```sh
-.
-├── README.md                 # This README
-├── app                       # The backend (Python)
-│   ├── app.py                # Setup + API handling
-│   ├── modsim.py             # Modeling and simulation functions
-│   ├── simulator.py          # Core simulation runtime
-│   └── store.py              # In-memory stream data structure
-├── queries                   # Query-parsing library (Rust)
-│   └── src
-│       ├── grammar.lalrpop   # The syntax definition
-│       ├── lib.rs            # The parser library
-│       └── main.rs           # A binary for using the parser
-└── web                       # The frontend (React/TypeScript)
-    └── src
-        ├── App.tsx           # View simulation results
-        └── SimulateForm.tsx  # Define a simulation
-```
+Choose one of the options below to run the app at http://localhost:3030 and API at http://localhost:8000.
 
-### Tips
-- You may wish to search for `NOTE:` in the code to get situated.
-- The Python and React code will auto-reload when edited, but Rust changes require manual rebuilds.
-- It's possible to work on parts of this repo outside of the docker containers for more rapid development.
+The `LOG_LEVEL` environment variable configures the logging level.
 
-### Tutorial
-In the initial version, the first body is not affected by the gravitational force of the second. See `app/query_tutorial.md` for guidance on fixing this, and a brief introduction to the nano query language.
+### Docker Compose
+Recommended for non-Rust work.
+
+- Install [Docker](https://www.docker.com/products/docker-desktop/)
+- Run `./bin/main` to run the app with Docker Compose
+- Non-Rust changes reload automatically
+- Rust changes require re-running `./bin/main`
+
+### Process Compose
+Recommended for Rust work.
+
+- Either:
+   - Install [process-compose](https://f1bonacc1.github.io/process-compose/installation/), [Rust](https://rust-lang.org/tools/install/), [uv](https://docs.astral.sh/uv/getting-started/installation/), and [Node 24](https://nodejs.org/en/download)
+      - Run `./bin/setup`
+   - Install [Nix](https://docs.determinate.systems/determinate-nix/) and [direnv](https://search.nixos.org/packages?channel=26.05&query=direnv#show=direnv)
+      - Run `direnv allow`
+- Run `./bin/build` (or `./bin/build --release`)
+- Run `./bin/main --dev` to run the app with Process Compose
+- Non-Rust changes reload automatically
+- Rust changes reload automatically after `./bin/build` commands
+
+After `./bin/build`s, you can also run a simulation directly with the `./bin/run` script.
+
+## Tutorial
+In the initial version, the first body is not affected by the gravitational force of the second. See [app/query_tutorial.md](./app/query_tutorial.md) for guidance on fixing this, and a brief introduction to the nano query language.
