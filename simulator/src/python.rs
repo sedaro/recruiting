@@ -49,8 +49,6 @@ impl Simulator {
 
         let frames = PyList::empty(py);
         for frame in self.inner.frames() {
-            // The agent is named in the frame rather than keyed by it: a frame is one
-            // agent's state, and a reader that wants them grouped can group them.
             frames.append(PyTuple::new(
                 py,
                 [

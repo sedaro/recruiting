@@ -78,8 +78,7 @@ def simulate():
     # Build a simulator
     simulator = Simulator(init, AGENTS)
 
-    # Run simulation. Each frame is `[start, end, agentId, state]`, and holds the
-    # one agent that stepped to it.
+    # Run simulation. Each frame is `[start, end, agentId, state]`.
     frames = simulator.run()
 
     # Save data to database
