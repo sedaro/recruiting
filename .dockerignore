@@ -9,3 +9,10 @@
 **/.git
 **/.dockerignore
 **/Dockerfile
+# Build outputs. The image builds the simulator from source; a host `target/` or
+# `build/` would only be copied in and then ignored — or, worse, imported.
+**/target
+**/*.so
+/build
+.direnv
+result
