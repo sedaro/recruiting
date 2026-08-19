@@ -37,7 +37,14 @@ const App = () => {
         // NOTE: Uncomment to see the raw data in the console
         // console.log('Data:', data);
 
-        setInitialState(data[0][2]);
+        // A frame holds one agent, and the ones an agent started in are the frames
+        // that begin and end at the same time: nothing stepped to them. Together
+        // they are the state the simulation started from.
+        const initial: DataFrame = {};
+        data.forEach(([t0, t1, frame]) => {
+          if (t0 === t1) Object.assign(initial, frame);
+        });
+        setInitialState(initial);
 
         const baseData = () => ({
           x: [],
